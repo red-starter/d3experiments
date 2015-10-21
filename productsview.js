@@ -97,6 +97,7 @@ populateTree(tree_config,root)
 // console.log(tree)
 
 // ******************* VISUALIZE TREE ****************************
+// taken from  mbostock the master himself
 
 var margin = {top: 20, right: 120, bottom: 20, left: 120},
     width = 1200 - margin.right - margin.left,
