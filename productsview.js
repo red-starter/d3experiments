@@ -30,7 +30,7 @@ var pluck = function(array,property){
 	array.forEach(function(object){
 		var temp = [];
 		properties.forEach(function(prop){
-			console.log(object[prop])
+			// console.log(object[prop])
 			res.push(temp.concat([object[prop]]))
 		})
 		// res.push(temp)
@@ -117,7 +117,8 @@ var svg = d3.select("body").append("svg")
     .attr("width", width + margin.right + margin.left)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  // this was the issue
+    // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // collapse tree initially except for root by toggleing between _.children and children
 function collapse(d) {
@@ -127,55 +128,53 @@ function collapse(d) {
 	  d.children = null;
 	}
 }
-// define position of initial root
-root.x0 = height / 2;
+
+root.x0 = (width + margin.right + margin.left)/2;
 root.y0 = 0;
-// turn on if deafault is toggle
-// root.children.forEach(collapse)
-// root._children = root.children
-// root.children = null
-// render collapsed tree
-update(root);
-
-// normalize width
-//scale x coordinate to fit into svg element, mapX and mapY are functions
-
-// find max and min
-var nodes = tree.nodes(root).reverse()
-console.dir(nodes[0])
-
-// var mapY = d3.scale.linear().domain([-10,10]).range([svgOptions.height - svgOptions.margin,svgOptions.margin]);
+update(root)
+// for (var i = 0; i < root.children.length; i++) {
+//   child = root.children[i]
+//   update(child,child);
+// };
 
 
 d3.select(self.frameElement).style("height", "800px");
 
 function update(source) {
-
   // Compute the new tree layout.
-  var nodes = tree.nodes(root).reverse(),
+  var nodes = tree.nodes(root).slice(1),
       links = tree.links(nodes);
-  // node is an array of nodes, the first one is the deepest, the last one the shalowest
-    // var mapX = function(d){return d};
-  var mapX = d3.scale.linear()
-            .domain([nodes[nodes.length-1].x,nodes[0].x])
-            .range([margin.left,width-margin.right]);
-  
 
-  // Normalize for fixed-depth.
-  nodes.forEach(function(d) { d.y = d.depth * 180;});
+  // the d3 tree class dynamically calculates new d.y d.x, so if want it constant just declare 
+  // the x and y here
 
-  // Update the nodes…
+  nodes.forEach(function(d){
+
+    if (d.depth === 0){
+      d.y = 0
+      d.x = (width + margin.right + margin.left)/2;
+    } else if (d.depth === 1 ){
+      d.y = 120
+    } else {
+    // } else if (node.depth === 1){
+    //    d.y = d.depth * 180; 
+    // } else if (node.depth === 2){
+      d.y = Math.sqrt(d.depth) * 180
+    }
+
+  })
+  //update nodes
   var node = svg.selectAll("g.node")
       .data(nodes, function(d) { return d.id || (d.id = ++i); });
-
-  // Enter any new nodes at the parent's previous position.
+  // Enter any new nodes at the parent's previous position. (so it can pan from there)
   var nodeEnter = node.enter().append("g")
       .attr("class", "node")
-      .attr("transform", function(d) { return "translate(" + mapX(source.x0) + "," +  source.y0+ ")"; })
-      .on("click", click);
+      .attr("transform", function(d) { return "translate(" + source.x0 + "," +  source.y0+ ")"; })
+      .on("click", toggleChildren);
 
+  // for every node append a circle at that place
   nodeEnter.append("circle")
-      .attr("r", 1e-6)
+      .attr("r", 10)
       .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; })
       // add tooltip
 		.append("svg:title")
@@ -193,7 +192,7 @@ function update(source) {
   // Transition nodes to their new position.
   var nodeUpdate = node.transition()
       .duration(duration)
-      .attr("transform", function(d) { return "translate(" + mapX(d.x) + "," + d.y  + ")"; });
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y  + ")"; });
 
   nodeUpdate.select("circle")
       .attr("r", 4.5)
@@ -205,7 +204,7 @@ function update(source) {
   // Transition exiting nodes to the parent's new position.
   var nodeExit = node.exit().transition()
       .duration(duration)
-      .attr("transform", function(d) { return "translate(" + mapX(source.x) + "," +  source.y+ ")"; })
+      .attr("transform", function(d) { return "translate(" + source.x + "," +  source.y+ ")"; })
       .remove();
 
   nodeExit.select("circle")
@@ -249,10 +248,10 @@ function update(source) {
 }
 
 // Toggle children on click.
-function click(d) {
-  if (d.children) {
-    d._children = d.children;
-    d.children = null;
+function toggleChildren(d) {
+  if (d.children) {  
+    // when clicking collapse turn all kids off
+    collapse(d)
   } else {
     d.children = d._children;
     d._children = null;
