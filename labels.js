@@ -35,30 +35,35 @@ var returnYDFS = function(node,path){
 var toggleToDepthBFS = function(tree,depth){
 	// go n-1 deep
 	// root always toggle on
+	// start at roots kids
 	var curArr = [];
 	var nextArr = tree.children;
 	for (var i = 0; i < depth-1; i++) {
 		curArr = nextArr;
 		nextArr = [];
+		console.log(curArr)
 		// iterate through children and toggle them
 		for (var j = 0; j < curArr.length; j++) {
-			node = children[j];
+			node = curArr[j];
+			// console.log('collapsing',node.value)
 			if (node._children){
 				node.children = node._children
 				node._children = null
 			}
-			nextArr.push(node);
+			// push kids to next arr
+			nextArr = nextArr.concat(node.children);
 		};
 	};
 	// now have access to all nodes in the end, want untoggle if toggled
 	for (var i = 0; i < nextArr.length; i++) {
 		node = nextArr[i];
 		if (node.children){
-			node._children = children;
+			node._children = node.children;
 			node.children = null;
 		}
 	};
 }
+
 // ***************** LABELS OF ROWS ***********************
 // create an array of lable objects to which we append rect and text
 var createLabels = function(tree_config,size,length){
@@ -73,7 +78,8 @@ var createLabels = function(tree_config,size,length){
 			y:y,
 			height:height,
 			width:length,
-			value:key || 'name'
+			value:key || 'name',
+			depth:labels.length+1
 		})
 	};
 	return labels	
@@ -171,6 +177,15 @@ buildLabeledRectangles(config_table,'config','darksalmon')
 addOrderEventListeners('.config')
 addHover('.config')
 addHover('.label')
+
+svg.selectAll('.label')
+.data(labels)
+.on('click',function(d){
+	toggleToDepthBFS(root,d.depth)
+	update(root)
+})
+
+
 
 
 

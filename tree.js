@@ -15,10 +15,10 @@
 var data = JSON.parse(fakeData(20))
 //build tree based on tree configuration, lets make default CATEGORY -> BRAND -> PRODUCT // last one is always product_name
 // var tree_config = ['brand_name']
-// var tree_config = ['brand_name','category','size','status']
+var tree_config = ['brand_name','category','size','status']
 // maybe price added
 var config =  ['category','brand_name','status','size']
-var tree_config = ['size','status','brand_name']
+// var tree_config = ['size','status','brand_name']
 
 var Tree = function(obj){
 	this.value = obj.value || null;
@@ -128,6 +128,7 @@ function collapse(d) {
 // width =200
 root.x0 = (width + margin.right + margin.left)/2;
 root.y0 = 0;
+// collapse(root)
 update(root)
 
 d3.select(self.frameElement).style("height", "800px");
