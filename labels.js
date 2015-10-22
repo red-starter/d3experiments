@@ -50,6 +50,7 @@ var toggleToDepthBFS = function(tree,depth){
 				node.children = node._children
 				node._children = null
 			}
+			// update(node)
 			// push kids to next arr
 			nextArr = nextArr.concat(node.children);
 		};
@@ -61,6 +62,7 @@ var toggleToDepthBFS = function(tree,depth){
 			node._children = node.children;
 			node.children = null;
 		}
+		update(node)
 	};
 }
 

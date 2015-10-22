@@ -12,13 +12,13 @@
 // the default children accessor assumes each input data is an object with a children array
 
 // get parsed data from helper function
-var data = JSON.parse(fakeData(20))
+var data = JSON.parse(fakeData(25))
 //build tree based on tree configuration, lets make default CATEGORY -> BRAND -> PRODUCT // last one is always product_name
-// var tree_config = ['brand_name']
-var tree_config = ['brand_name','category','size','status']
 // maybe price added
 var config =  ['category','brand_name','status','size']
 // var tree_config = ['size','status','brand_name']
+var tree_config = ['brand_name','category','size','status']
+// var tree_config = ['brand_name']
 
 var Tree = function(obj){
 	this.value = obj.value || null;
