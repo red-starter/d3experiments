@@ -132,36 +132,24 @@ function collapse(d) {
 root.x0 = (width + margin.right + margin.left)/2;
 root.y0 = 0;
 update(root)
-// for (var i = 0; i < root.children.length; i++) {
-//   child = root.children[i]
-//   update(child,child);
-// };
-
 
 d3.select(self.frameElement).style("height", "800px");
 
 function update(source) {
-  // Compute the new tree layout.
+  // Compute the new tree layout, ignore the root
   var nodes = tree.nodes(root).slice(1),
       links = tree.links(nodes);
-
   // the d3 tree class dynamically calculates new d.y d.x, so if want it constant just declare 
   // the x and y here
-
   nodes.forEach(function(d){
-
     if (d.depth === 0){
       d.y = 0
       d.x = (width + margin.right + margin.left)/2;
-    } else if (d.depth === 1 ){
-      d.y = 120
+    // } else if (d.depth === 1 ){
+    //   d.y = margin.top*6
     } else {
-    // } else if (node.depth === 1){
-    //    d.y = d.depth * 180; 
-    // } else if (node.depth === 2){
       d.y = Math.sqrt(d.depth) * 180
     }
-
   })
   //update nodes
   var node = svg.selectAll("g.node")
