@@ -1,30 +1,8 @@
-// ******************* VISUALIZE TREE ****************************
-// with help from mbostock the master himself
-var margin = {top: 20, right: 120, bottom: 20, left: 120},
-    width = 1000 - margin.right - margin.left,
-    height = 1000 - margin.top - margin.bottom;
-
-var i = 0,
-    duration = 750
-
-// moves the particles from a source to an end point
-var diagonal = d3.svg.diagonal()
-    .projection(function(d) { return [d.x, d.y]; });
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.right + margin.left)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    // this makes a margin
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-// not sure what this does
-// d3.select(self.frameElement).style("height", "800px");
-
-function update(source,tree,root) {
+function update(source,root) {
   // Compute the new tree layout, don't render root
-  var nodes = tree.nodes(root).slice(1),
-      links = tree.links(nodes);
+  var d3tree = d3.layout.tree().size([width-20,height]);
+  var nodes = d3tree.nodes(root).slice(1),
+      links = d3tree.links(nodes);
   // the d3 tree class dynamically calculates new d.y d.x, so if want to make them
   // constant declare the x and y here
   nodes.forEach(function(d){
@@ -38,13 +16,16 @@ function update(source,tree,root) {
     }
   })
 
+  var i = 0;
   var node = svg.selectAll("g.node")
       .data(nodes, function(d) { return d.id || (d.id = ++i); });
   // Enter any new nodes at the parent's previous position. (so it can pan from there)
   var nodeEnter = node.enter().append("g")
       .attr("class", "node")
       .attr("transform", function(d) { return "translate(" + source.x0 + "," +  source.y0+ ")"; })
-      .on("click", toggleChildren);
+      .on("click", function(d){
+        toggleChildren(d,root)
+      });
 
   // for every node append a circle at that place
   nodeEnter.append("circle")
@@ -64,6 +45,7 @@ function update(source,tree,root) {
       .style("fill-opacity", 1e-6);
 
   // Transition nodes to their new position.
+  var duration = 750;
   var nodeUpdate = node.transition()
       .duration(duration)
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y  + ")"; });
@@ -121,7 +103,7 @@ function update(source,tree,root) {
   });
 }
 // Toggle children on click.
-function toggleChildren(d) {
+function toggleChildren(d,root) {
   if (d.children) {  
     // when clicking collapse turn all kids off
     collapse(d)
@@ -129,8 +111,7 @@ function toggleChildren(d) {
     d.children = d._children;
     d._children = null;
   }
-  console.log(d3tree)
-  update(d,d3tree,root);
+  update(d,root);
 }
 
 
