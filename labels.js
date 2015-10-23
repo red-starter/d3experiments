@@ -78,10 +78,9 @@ var updateClassText = function(classed){
 	text.text(function(d){return d.order !== null && d.value + ' ' + d.order || d.value})				
 }
 
-var addOrder = function(classed,config_table){
+var addFilterOrder = function(classed,config_table,cb){
 	var data = svg.selectAll(classed)
 	data.on('click',function(d){
-		// console.log('click')
 		if (d.order !== null){
 			//removing from theconfig_table
 			config_table.splice(d.order,1)
@@ -96,6 +95,7 @@ var addOrder = function(classed,config_table){
 			config_table.push(d)
 			d.order =config_table.length -1
 		}
+		cb(config_table)
 		updateClassText(classed);
 	})
 }

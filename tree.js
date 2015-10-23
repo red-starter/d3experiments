@@ -31,12 +31,6 @@ function update(source,root) {
   })
 
   var i = 0;
-
-  svg.selectAll("g.node").remove()
-  svg.selectAll("path.link").remove()
-  svg.selectAll("circle").remove()
-
-
   var node = svg.selectAll("g.node")
       .data(nodes, function(d) { return d.id || (d.id = ++i); });
   // Enter any new nodes at the parent's previous position. (so it can pan from there)
