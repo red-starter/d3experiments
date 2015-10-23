@@ -1,3 +1,17 @@
+var margin = {top: 20, right: 120, bottom: 20, left: 120},
+    width = 1000 - margin.right - margin.left,
+    height = 1000 - margin.top - margin.bottom;
+// moves the particles from a source to an end point
+var diagonal = d3.svg.diagonal()
+    .projection(function(d) { return [d.x, d.y]; });
+    
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.right + margin.left)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    // this makes a margin
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 function update(source,root) {
   // Compute the new tree layout, don't render root
   var d3tree = d3.layout.tree().size([width-20,height]);
@@ -17,6 +31,12 @@ function update(source,root) {
   })
 
   var i = 0;
+
+  svg.selectAll("g.node").remove()
+  svg.selectAll("path.link").remove()
+  svg.selectAll("circle").remove()
+
+
   var node = svg.selectAll("g.node")
       .data(nodes, function(d) { return d.id || (d.id = ++i); });
   // Enter any new nodes at the parent's previous position. (so it can pan from there)

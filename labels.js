@@ -22,7 +22,7 @@ var createConfigTable = function(config,size,width){
 var createLabels = function(tree_config,size,length,root){
 	var pathY = returnYDFS(root)
 	var labels = []
-	for (var i = 1; i <pathY.length-1; i++) {
+	for (var i = 1; i <pathY.length; i++) {
 		var key = tree_config[i-1];
 		var height = Math.sqrt(pathY.length-i)*size
 		var y = pathY[i] 
@@ -31,7 +31,7 @@ var createLabels = function(tree_config,size,length,root){
 			y:y,
 			height:height,
 			width:length,
-			value:key,
+			value:key || 'name',
 			depth:labels.length+1
 		})
 	};
