@@ -1,7 +1,6 @@
+// info from get request --> photo use stock kittens website and fakerjs, 
 // product_name, brand_name, tags,number of people who own it, category, status ->owned/finished/wish/expired
 // size --> travel/full , photo , personal_notes -->280 characters
-
-
 var datum = function(obj){
 	// properties shared with other products, passed in
 	this.category=obj.category;
