@@ -7,7 +7,6 @@ var margin = {top: 20, right: 120, bottom: 20, left: 120},
 var i = 0,
     duration = 750
 
-
 // moves the particles from a source to an end point
 var diagonal = d3.svg.diagonal()
     .projection(function(d) { return [d.x, d.y]; });
@@ -18,19 +17,6 @@ var svg = d3.select("body").append("svg")
     .append("g")
     // this makes a margin
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-// ******************** BUILD TREE ************************
-var buildTree = function(tree_config,root,data,width,height){
-  // build tree, each level has a property indexed by tree_config
-  populateTree(tree_config,root)
-  // specify here how big the tree will be
-  var d3tree = d3.layout.tree().size([width-20,height]);
-
-  // where the root starts off at then transitioned wirh diagonal
-  root.x0 = (width + margin.right + margin.left)/2;
-  root.y0 = 0;
-  update(root,d3tree,root)  
-}
 
 // not sure what this does
 // d3.select(self.frameElement).style("height", "800px");
@@ -134,6 +120,19 @@ function update(source,tree,root) {
     d.y0 = d.y;
   });
 }
+// Toggle children on click.
+function toggleChildren(d) {
+  if (d.children) {  
+    // when clicking collapse turn all kids off
+    collapse(d)
+  } else {
+    d.children = d._children;
+    d._children = null;
+  }
+  console.log(d3tree)
+  update(d,d3tree,root);
+}
+
 
 
 

@@ -17,12 +17,12 @@ var createConfigTable = function(config,size,width){
 	}
 	return config_table;
 };
-// ***************** LABELS OF ROWS ***********************
+// ************************ LABELS OF ROWS *************************
 // create an array of label objects to which we append rect and text
 var createLabels = function(tree_config,size,length,root){
 	var pathY = returnYDFS(root)
 	var labels = []
-	for (var i = 1; i <pathY.length; i++) {
+	for (var i = 1; i <pathY.length-1; i++) {
 		var key = tree_config[i-1];
 		var height = Math.sqrt(pathY.length-i)*size
 		var y = pathY[i] 
@@ -31,7 +31,7 @@ var createLabels = function(tree_config,size,length,root){
 			y:y,
 			height:height,
 			width:length,
-			value:key || 'name',
+			value:key,
 			depth:labels.length+1
 		})
 	};
@@ -75,39 +75,29 @@ var addHover = function(classed,opacity){
 
 var updateClassText = function(classed){
 	var text = svg.selectAll('text'+classed)
-	// text.text(function(d){
-		// return d.value + ' ' + d.order + ' '})
-	// blew up before cuz ze 0 is falsy
 	text.text(function(d){return d.order !== null && d.value + ' ' + d.order || d.value})				
 }
-var closureScopeStorage = function(){
-	// store in a closure
-	// here we dump the order of filtering from bottom up
-	var filterArr = [];
 
-	var addOrderEventListeners = function(classed){
-		var data = svg.selectAll(classed)
-	// change opacity on hover 
-		data.on('click',function(d){
-			// console.log('click')
-			if (d.order !== null){
-				//removing from the filterArr
-				filterArr.splice(d.order,1)
-				// togle order off 
-				d.order = null
-				//update order of all other data in filerArr
-				filterArr.forEach(function(datum,index){
-					datum.order = index;
-				})
-			} else {
-				// not in filterArr
-				filterArr.push(d)
-				d.order = filterArr.length -1
-			}
-			updateClassText(classed);
-		})
-	}
-	return addOrderEventListeners	
+var addOrder = function(classed,config_table){
+	var data = svg.selectAll(classed)
+	data.on('click',function(d){
+		// console.log('click')
+		if (d.order !== null){
+			//removing from theconfig_table
+			config_table.splice(d.order,1)
+			// togle order off 
+			d.order = null
+			//update order of all other data in filerArr
+			config_table.forEach(function(datum,index){
+				datum.order = index;
+			})
+		} else {
+			// not inconfig_table
+			config_table.push(d)
+			d.order =config_table.length -1
+		}
+		updateClassText(classed);
+	})
 }
 
 
