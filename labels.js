@@ -41,7 +41,7 @@ var toggleToDepthBFS = function(tree,depth){
 	for (var i = 0; i < depth-1; i++) {
 		curArr = nextArr;
 		nextArr = [];
-		console.log(curArr)
+		// console.log(curArr)
 		// iterate through children and toggle them
 		for (var j = 0; j < curArr.length; j++) {
 			node = curArr[j];
@@ -62,7 +62,7 @@ var toggleToDepthBFS = function(tree,depth){
 			node._children = node.children;
 			node.children = null;
 		}
-		update(node)
+		// update(node)
 	};
 }
 
@@ -111,17 +111,6 @@ var buildLabeledRectangles = function(data,classed,fill){
 		.text(function(d) { return d.value})
 }
 
-// var updateConfig = function(classed,filterOrder){
-// 	// update order of the config table
-// 	svg.selectAll(classed)
-// 	.each(function(d){
-// 		console.log(d)
-// 		// d.order(filterOrder.indexOf(d.value))
-// 	})
-// 	.selectAll('text')
-// 	.text(function(d) { return d.order && d.value + d.order || d.value});
-// 	// now rerender the text
-// }
 var addHover = function(classed,opacity){
 	opacity = opacity || 0.6
 	svg.selectAll(classed)
@@ -134,11 +123,11 @@ var addHover = function(classed,opacity){
 }
 
 var updateClassText = function(classed){
-	// console.log('clickes')
 	var text = svg.selectAll('text'+classed)
-	// var text = data.selectAll('text')
-	// console.log(text)
-	text.text(function(d){return d.order && d.value + d.order || d.value})				
+	// text.text(function(d){
+		// return d.value + ' ' + d.order + ' '})
+	// blew up before cuz ze 0 is falsy
+	text.text(function(d){return d.order !== null && d.value + ' ' + d.order || d.value})				
 }
 var closureScopeStorage = function(){
 	// store in a closure
@@ -150,7 +139,7 @@ var closureScopeStorage = function(){
 	// change opacity on hover 
 
 		data.on('click',function(d){
-			console.log('click')
+			// console.log('click')
 			if (d.order !== null){
 				//removing from the filterArr
 				filterArr.splice(d.order,1)
@@ -166,6 +155,23 @@ var closureScopeStorage = function(){
 				d.order = filterArr.length -1
 			}
 			updateClassText(classed);
+			// there might be an obvious way to update the nodes
+			// var res = ''
+			// filterArr.forEach(function(datum){
+			// 	res+=datum.value + ' ' + datum.order + ' '
+			// })
+			// console.log(res)
+			// populate tree with filterArr
+			// var tree_config = filterArr.map(function(d){return d.value})
+			// console.log(tree_config)
+			// create new tree with user specified filters
+			// var root = new Tree({value:'root',products:data});
+			// modifies tree, with tree configuration
+			// tree now contains all required info
+			// populateTree(tree_config,root)
+			// console.log(root)
+			// populateTree(tree_config,root)
+			// update(root)
 		})
 	}
 	return addOrderEventListeners	
@@ -180,6 +186,7 @@ addOrderEventListeners('.config')
 addHover('.config')
 addHover('.label')
 
+// bfs toggle
 svg.selectAll('.label')
 .data(labels)
 .on('click',function(d){
