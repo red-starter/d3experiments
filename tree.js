@@ -19,20 +19,23 @@ var svg = d3.select("body").append("svg")
     // this makes a margin
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var root = new Tree({value:'root',products:data});
-// build tree, each level has a property indexed by tree_config
-populateTree(tree_config,root)
-// specify here how big the tree will be
-var tree = d3.layout.tree().size([width-20,height]);
+// ******************** BUILD TREE ************************
+var buildTree = function(tree_config,root,data,width,height){
+  // build tree, each level has a property indexed by tree_config
+  populateTree(tree_config,root)
+  // specify here how big the tree will be
+  var d3tree = d3.layout.tree().size([width-20,height]);
 
-// where the root starts off at then transitioned wirh diagonal
-root.x0 = (width + margin.right + margin.left)/2;
-root.y0 = 0;
-update(root)
+  // where the root starts off at then transitioned wirh diagonal
+  root.x0 = (width + margin.right + margin.left)/2;
+  root.y0 = 0;
+  update(root,d3tree,root)  
+}
 
-d3.select(self.frameElement).style("height", "800px");
+// not sure what this does
+// d3.select(self.frameElement).style("height", "800px");
 
-function update(source) {
+function update(source,tree,root) {
   // Compute the new tree layout, don't render root
   var nodes = tree.nodes(root).slice(1),
       links = tree.links(nodes);
@@ -132,14 +135,5 @@ function update(source) {
   });
 }
 
-// Toggle children on click.
-function toggleChildren(d) {
-  if (d.children) {  
-    // when clicking collapse turn all kids off
-    collapse(d)
-  } else {
-    d.children = d._children;
-    d._children = null;
-  }
-  update(d);
-}
+
+

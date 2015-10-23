@@ -19,7 +19,7 @@ var createConfigTable = function(config,size,width){
 };
 // ***************** LABELS OF ROWS ***********************
 // create an array of label objects to which we append rect and text
-var createLabels = function(tree_config,size,length){
+var createLabels = function(tree_config,size,length,root){
 	var pathY = returnYDFS(root)
 	var labels = []
 	for (var i = 1; i <pathY.length; i++) {
@@ -88,7 +88,6 @@ var closureScopeStorage = function(){
 	var addOrderEventListeners = function(classed){
 		var data = svg.selectAll(classed)
 	// change opacity on hover 
-
 		data.on('click',function(d){
 			// console.log('click')
 			if (d.order !== null){
@@ -106,44 +105,11 @@ var closureScopeStorage = function(){
 				d.order = filterArr.length -1
 			}
 			updateClassText(classed);
-			// there might be an obvious way to update the nodes
-			// var res = ''
-			// filterArr.forEach(function(datum){
-			// 	res+=datum.value + ' ' + datum.order + ' '
-			// })
-			// console.log(res)
-			// populate tree with filterArr
-			// var tree_config = filterArr.map(function(d){return d.value})
-			// console.log(tree_config)
-			// create new tree with user specified filters
-			// var root = new Tree({value:'root',products:data});
-			// modifies tree, with tree configuration
-			// tree now contains all required info
-			// populateTree(tree_config,root)
-			// console.log(root)
-			// populateTree(tree_config,root)
-			// update(root)
 		})
 	}
 	return addOrderEventListeners	
 }
-addOrderEventListeners = closureScopeStorage()
-// ************* FUNCTION CALLS FOR LABELS AND CONFIG TABLE
-var labels = createLabels(tree_config,20,100);
-var config_table = createConfigTable(config,20,100)
-buildLabeledRectangles(labels,'label')
-buildLabeledRectangles(config_table,'config','darksalmon')
-addOrderEventListeners('.config')
-addHover('.config')
-addHover('.label')
 
-// bfs toggle
-svg.selectAll('.label')
-.data(labels)
-.on('click',function(d){
-	toggleToDepthBFS(root,d.depth)
-	update(root)
-})
 
 
 
