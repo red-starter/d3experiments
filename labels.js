@@ -100,6 +100,47 @@ var addFilterOrder = function(classed,config_table,cb){
 	})
 }
 
+var buildImage = function(data){
+	svg.selectAll('.productImage').remove();
+	// console.log('buildImage')
+	// console.log(data)
+	svg.selectAll('.productImage')
+	.data([data])
+	.enter()
+	// .append('text')
+	// // .attr("width", 200)
+	// // .attr("height", 200)
+	// .attr("x", 500)
+	// .attr("y", 500)
+	// .attr("dy", ".35em")
+	// .attr("fill","#00C78C")
+
+	// .append("text")
+	// 	.classed(classed,true)
+	// 	.attr("x", function(d) { return d.x})
+	// 	.attr("y", function(d) { return d.y})
+	// .text(function(d) { return d.photo})
+	// .append('svg:image')
+	// .attr('src',function(d) { return d.photo})
+	// .attr('alt',function(d) { return d.personal_notes})
+	// .style("width","304px")
+	// .style("height","228px")
+	.append("svg:image")
+	.classed('productImage',true)
+	.attr('x',function(d){return d.x})
+	.attr('y',function(d){return d.y+10})
+	.attr('width', 70)
+	.attr('height', 70)
+	.attr('xlink:href',"images.jpg")
+	// .attr("xmlns","https://cdn.css-tricks.com/wp-content/uploads/2015/05/kiwi.svg")
+		// function(d) { return d.personal_notes})
+// <img src="pic_mountain.jpg" alt="Mountain View" style="width:304px;height:228px;">
+	// .attr("dy", ".35em")
+	// .text(function(d){
+		// return d.products[0].photo;
+	// })
+}
+
 
 
 

@@ -19,6 +19,8 @@ function update(source,root) {
       links = d3tree.links(nodes);
   // the d3 tree class dynamically calculates new d.y d.x, so if want to make them
   // constant declare the x and y here
+  var maxDepth = returnYDFS(root).length-1
+
   nodes.forEach(function(d){
     if (d.depth === 0){
       d.y = 0
@@ -38,6 +40,11 @@ function update(source,root) {
       .attr("class", "node")
       .attr("transform", function(d) { return "translate(" + source.x0 + "," +  source.y0+ ")"; })
       .on("click", function(d){
+        svg.selectAll('.productImage').remove();
+        if (d.depth === maxDepth){
+          // buildImage(d.)
+          buildImage(d)
+        }
         toggleChildren(d,root)
       });
 
